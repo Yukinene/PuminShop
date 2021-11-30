@@ -21,9 +21,19 @@
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <a class="dropdown-item" href="{{route('products.index')}}">Product List</a>
                     <a class="dropdown-item" href="{{route('orders.index')}}">Order List</a>
-                    <a class="dropdown-item" href="{{route('products.create')}}">Add Product</a>
+                    <a class="dropdown-item" href="{{route('logs.index')}}">Customer Log</a>
+                </li>
 
+                @if (Auth::user()->isAdmin())
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="{{route('home')}}" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin tools</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                    <a class="dropdown-item" href="{{route('products.create')}}">Add Product</a>
+                    <a class="dropdown-item" href="{{route('users.index')}}">Employee List</a>
+                @endif
                     </li>
+
+
                     <form class="form-inline my-2 my-lg-0" action="{{ route('logout') }}" method="post">
                         @csrf
                         <button class="btn btn-danger" type="submit">LOGOUT</button>

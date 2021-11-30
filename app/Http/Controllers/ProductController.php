@@ -24,7 +24,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        if (Auth::check())
+        if (Auth::user()->isAdmin())
         {return view('products.create');}
         return redirect()->route('login');
     }
@@ -37,7 +37,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::check())
+        if (Auth::user()->isAdmin())
         {
             if ($request->input('name') == null || $request->input('description') == null) {
                 return redirect()->back()->with('error', "Please fill out information .");
@@ -48,6 +48,7 @@ class ProductController extends Controller
                 $product->name = $request->input('name');
                 $product->description = $request->input('description');
                 $product->price = $request->input('price');
+                $product->amount = $request->input('amount');
                 $product->save() ;
                 return redirect()->route('products.index');
             }
@@ -104,6 +105,7 @@ class ProductController extends Controller
                 $product->name = $request->input('name');
                 $product->description = $request->input('description');
                 $product->price = $request->input('price');
+                $product->amount = $request->input('amount');
                 $product->save() ;
                 return redirect()->route('products.index')->with('success', "Edit Done");
             }
@@ -120,7 +122,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
 
-        if (Auth::check())
+        if (Auth::user()->isAdmin())
         {
             $product = Product::findOrFail($id);
             $product->delete();
@@ -187,6 +189,7 @@ class ProductController extends Controller
         return [
             'name' => $product->name,
             'quantity' => 1,
+            'amount' => $product->amount,
             'price' => $product->price
         ];
     }
@@ -194,6 +197,7 @@ class ProductController extends Controller
     protected function setSessionAndReturnResponse($cart)
     {
         session()->put('cart', $cart);
+        /*return($cart);*/
         return redirect()->route('cart')->with('success', "Added to Cart");
     }
 

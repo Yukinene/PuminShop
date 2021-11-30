@@ -15,9 +15,12 @@
             </div>
             <div class="mt-4">
                 <label for="name">Description</label><br>
-                <input type="text" name="description"
-                       class="w-full border p-2"
-                       placeholder="Description" autocomplete="off">
+                <textarea name="description"
+                              id="description"
+                              class="w-full border p-2"
+                              value = ""
+                              rows="5">
+                    </textarea>
             </div>
             <div>
                 <label for ="price">Price</label><br>
@@ -26,7 +29,12 @@
                        value="1"
                        name="price" >
             </div>
-
+            <div>
+            <label for ="amount">Amount</label><br>
+            <input type = "number"  name="amount"
+                   min = "1"
+                   value = "1" >
+        </div>
             <br>
             <div>
                 <button type="submit" class="btn btn-success" >Add</button>

@@ -43,6 +43,8 @@ Route::get('/orders', [\App\Http\Controllers\OrderController::class,"index"])
 Route::get('/change-qty/{id}',  [\App\Http\Controllers\ProductController::class,"changeQty"])->name('change_qty');
 
 Route::resource('orders',\App\Http\Controllers\OrderController::class);
+Route::resource('logs',\App\Http\Controllers\LogController::class)->middleware('auth');
+Route::resource('users',\App\Http\Controllers\UserController::class)->middleware('auth');
 Route::resource('/products', \App\Http\Controllers\ProductController::class);
 
 require __DIR__.'/auth.php';

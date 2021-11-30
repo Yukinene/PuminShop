@@ -20,7 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return redirect()->route('home');
+        return redirect()->route('login');
         /*return view('auth.register');*/
     }
 
@@ -47,11 +47,9 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
-
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
 
-        return redirect()->route('home');
     }
 }

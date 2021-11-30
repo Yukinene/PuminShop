@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\Order;
+use App\Models\Log;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,7 +59,26 @@ class OrderController extends Controller
                 $order->tel = $request->input('tel');
                 $order->address = $request->input('address');
                 $order->amount = $request->input('amount');
+                $order->status = 0;
                 $order->save();
+
+                $cart = session()->get('cart');
+                for ($x = 1; $x <= $request->input('idmax'); $x++) {
+                    $product = Product::findOrFail($x);
+                    if (isset($cart[$product->id])) {
+                        $product->amount =  $product->amount - $cart[$product->id]['quantity'];
+
+                        $log = new Log();
+                        $log->name = $order->name;
+                        $log->orderid = $order->id;
+                        $log->pname = $product->name;
+                        $log->amount = $cart[$product->id]['quantity'];
+                        $log->save();
+                    }
+                    $product->save();
+                  }
+                
+                
                 $request->session()->forget('cart');
                 return redirect()
                     ->route('home')
@@ -86,7 +107,20 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        return redirect()->route('home');
+        if (Auth::check())
+        {   
+            $order = Order::findOrFail($id);
+            if($order->status < 1)
+            {
+                if (Auth::user()->isAdmin())
+                {
+                    return view('orders.edit',['order' => $order]);
+                }
+                return redirect()->back()->with('error', " Cannot allowed.");
+            }
+                return view('orders.edit',['order' => $order]);
+            }
+        return redirect()->route('login');
     }
 
     /**
@@ -98,7 +132,57 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return redirect()->route('home');
+        if (Auth::check())
+
+        {
+            if ($request->input('status') <= 0 ) {
+                return redirect()->back()->with('error', " Cannot be edit below 0.");
+            }
+            else
+            {
+                if($request->input('status') == 1)
+                {
+                    if (Auth::user()->isAdmin())
+                    {
+                        $order = Order::findOrFail($id);
+                        $order->status = $request->input('status');
+                        $order->save() ;
+                        return redirect()->route('orders.index');
+                    }
+                    else
+                    {
+                        return redirect()->back()->with('error', " Cannot allowed.");
+                    }
+                    
+                }
+                else
+                {
+                    $order = Order::findOrFail($id);
+                    if($order->status < 1)
+                    {
+                        if (Auth::user()->isAdmin())
+                    {
+                        $order->status = $request->input('status');
+                        $order->save() ;
+                        return redirect()->route('orders.index');
+                    }
+                    else
+                    {
+                        return redirect()->back()->with('error', " Cannot allowed.");
+                    }
+                    }
+                    else
+                    {
+                        $order->status = $request->input('status');
+                        $order->save() ;
+                        return redirect()->route('orders.index');
+                    }
+                    return redirect()->route('orders.index');
+                }
+                
+            }
+        }
+        return redirect()->route('login');
     }
 
     /**

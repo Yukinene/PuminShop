@@ -42,14 +42,16 @@
                                         type="number"
                                         value="{{$product['quantity']}}"
                                         disabled>
-                                    <button
+                                        @if ($product['amount'] <= $product['quantity'])@else
+                                        <button
                                         type="submit"
                                         value="up"
                                         name="change_to"
                                         class="btn btn-success"
-                                    >
+                                        >
                                         +
                                     </button>
+                                    @endif
                                 </form>
                             </td>
                             <td>฿{{$sub_total}}</td>
@@ -65,7 +67,7 @@
                     <td>
                         <a href="{{route('products.index')}}"
                            class="btn btn-warning"
-                        >Continue Shopping</a>
+                        >Continue Shopping</a><br><br>
                         <a href="{{route('orders.create')}}"
                            class="btn btn-success"
                         >Proceed to Pay</a>

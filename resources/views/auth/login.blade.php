@@ -2,7 +2,7 @@
     <x-auth-card>
         <x-slot name="logo">
             <a class="navbar-brand" href="/" >PuminShop</a><hr>
-            Admin Login
+            Login
         </x-slot>
 
         <!-- Session Status -->

@@ -16,12 +16,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                @php $total = 0; @endphp
+                @php 
+                $total = 0;
+                $id_max = 0;
+                @endphp
                 @if(session('cart'))
                     @foreach(session('cart') as $id => $product)
                         @php
                             $sub_total = $product['price'] * $product['quantity'];
                             $total += $sub_total;
+                            
+                            if($id_max < $id)
+                            {$id_max = $id;}
+    
                         @endphp
                         <tr>
                             <td>
@@ -73,6 +80,9 @@
                 </div>
                 <div>
                     <input type="hidden" name="amount" value="{{$total}}">
+                </div>
+                <div>
+                    <input type="hidden" name="idmax" value="{{$id_max}}">
                 </div>
                 <div>
                     <button type="submit" class="btn btn-success" >pay</button>
